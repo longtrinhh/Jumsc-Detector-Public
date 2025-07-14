@@ -16,22 +16,34 @@ let userSettings = {
 };
 
 // Load user settings
-chrome.storage.sync.get({
-  sensitivity: 0.4,
-  autoCheck: true,
-  pauseVideo: true
-}, function(items) {
-  userSettings = items;
-});
+try {
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.sync) {
+    chrome.storage.sync.get({
+      sensitivity: 0.4,
+      autoCheck: true,
+      pauseVideo: true
+    }, function(items) {
+      userSettings = items;
+    });
+  }
+} catch (error) {
+  console.log('Could not load user settings:', error);
+}
 
 // Listen for messages from popup
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.action === 'updateThreshold') {
-    userSettings.sensitivity = request.threshold;
-  } else if (request.action === 'updateAutoCheck') {
-    userSettings.autoCheck = request.autoCheck;
+try {
+  if (typeof chrome !== 'undefined' && chrome.runtime) {
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+      if (request.action === 'updateThreshold') {
+        userSettings.sensitivity = request.threshold;
+      } else if (request.action === 'updateAutoCheck') {
+        userSettings.autoCheck = request.autoCheck;
+      }
+    });
   }
-});
+} catch (error) {
+  console.log('Could not set up message listener:', error);
+}
 
 function isYouTubeVideoOrShorts(url) {
   return (

@@ -3,7 +3,7 @@
   "name": "Jumpscare Detector for YouTube",
   "version": "0.1.0",
   "description": "Warns users before jumpscares in YouTube videos by analyzing audio spikes.",
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "storage"],
   "host_permissions": ["https://www.youtube.com/*"],
   "background": {
     "service_worker": "background.js"
